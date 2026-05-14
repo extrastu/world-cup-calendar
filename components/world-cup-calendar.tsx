@@ -471,9 +471,14 @@ export function WorldCupCalendar() {
 
         {/* Hero Section */}
         <section className="relative overflow-hidden">
-          {/* Background with stadium image overlay effect */}
-          <div className="absolute inset-0 bg-gradient-to-b from-accent/5 via-transparent to-transparent" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent" />
+          {/* Stadium Background Image */}
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: "url('/images/stadium-bg.png')" }}
+          />
+          {/* Dark overlay for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/90 to-background/70" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
 
           <div className="relative px-4 md:px-8 py-8 md:py-12">
             {/* Top Bar */}
