@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { matches, groups, Match } from "@/lib/matches-data";
 import { MatchCard } from "@/components/match-card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Trophy, Users, Filter, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar, Trophy, Users, Filter, ChevronLeft, ChevronRight, CalendarPlus } from "lucide-react";
 
 type ViewMode = "calendar" | "group" | "knockout";
 type StageFilter = "all" | Match["stage"];
@@ -101,8 +101,19 @@ export function WorldCupCalendar() {
               </p>
             </div>
 
-            {/* View Mode Tabs */}
-            <div className="flex items-center gap-2 bg-secondary rounded-lg p-1">
+            <div className="flex items-center gap-3">
+              {/* Subscribe to Calendar */}
+              <a
+                href="/api/calendar"
+                download="fifa-world-cup-2026.ics"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
+              >
+                <CalendarPlus className="w-4 h-4" />
+                <span className="hidden sm:inline">订阅日历</span>
+              </a>
+
+              {/* View Mode Tabs */}
+              <div className="flex items-center gap-2 bg-secondary rounded-lg p-1">
               <Button
                 variant={viewMode === "calendar" ? "default" : "ghost"}
                 size="sm"
@@ -141,6 +152,7 @@ export function WorldCupCalendar() {
                 <Trophy className="w-4 h-4" />
                 淘汰赛
               </Button>
+              </div>
             </div>
           </div>
         </div>

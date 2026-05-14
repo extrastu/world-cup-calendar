@@ -2,6 +2,7 @@
 
 import { Match, teamCountryCodes } from "@/lib/matches-data";
 import { MapPin, Clock, Calendar } from "lucide-react";
+import Link from "next/link";
 
 interface MatchCardProps {
   match: Match;
@@ -48,7 +49,8 @@ export function MatchCard({ match }: MatchCardProps) {
   const isTBD = match.homeTeam.includes("W ") || match.homeTeam.includes("L ") || match.homeTeam.match(/^\d/);
 
   return (
-    <div className="group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:shadow-lg hover:border-primary/30">
+    <Link href={`/match/${match.id}`} className="block">
+      <div className="group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:shadow-lg hover:border-primary/30 cursor-pointer">
       {/* Stage Badge */}
       <div className="flex items-center justify-between mb-3">
         <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStageColor(match.stage)}`}>
@@ -123,6 +125,7 @@ export function MatchCard({ match }: MatchCardProps) {
           </div>
         )}
       </div>
-    </div>
+      </div>
+    </Link>
   );
 }
