@@ -17,6 +17,8 @@ import {
   Eye,
   Database,
   ArrowRight,
+  Star,
+  Bell,
 } from "lucide-react";
 import Link from "next/link";
 
