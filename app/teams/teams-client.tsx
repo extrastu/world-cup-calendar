@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { groupTeams, teamCountryCodes, playoffTeams } from "@/lib/matches-data";
+import { groupTeams, teamCountryCodes } from "@/lib/matches-data";
 import Link from "next/link";
 import {
   Home,
@@ -12,8 +12,6 @@ import {
   CalendarPlus,
   Info,
   HelpCircle,
-  ChevronDown,
-  ChevronUp,
 } from "lucide-react";
 
 function getFlagUrl(team: string, size: number = 80): string {
@@ -34,29 +32,35 @@ const continentMapping: Record<string, string> = {
   "Belgium": "欧洲", "Croatia": "欧洲", "England": "欧洲", "France": "欧洲",
   "Germany": "欧洲", "Netherlands": "欧洲", "Portugal": "欧洲", "Scotland": "欧洲",
   "Spain": "欧洲", "Switzerland": "欧洲", "Austria": "欧洲", "Norway": "欧洲",
+  "Czech Republic": "欧洲", "Bosnia & Herzegovina": "欧洲", "Sweden": "欧洲", 
+  "Turkey": "欧洲", "Slovenia": "欧洲", "Wales": "欧洲", "Serbia": "欧洲",
+  "Denmark": "欧洲", "Italy": "欧洲", "Poland": "欧洲",
   // South America
   "Argentina": "南美", "Brazil": "南美", "Colombia": "南美", "Ecuador": "南美",
-  "Paraguay": "南美", "Uruguay": "南美",
+  "Paraguay": "南美", "Uruguay": "南美", "Chile": "南美", "Peru": "南美",
+  "Bolivia": "南美", "Venezuela": "南美",
   // North/Central America & Caribbean
   "Canada": "北美", "Mexico": "北美", "USA": "北美", "Panama": "北美",
-  "Haiti": "北美", "Curaçao": "北美",
+  "Haiti": "北美", "Curaçao": "北美", "Costa Rica": "北美", "Honduras": "北美",
+  "Jamaica": "北美",
   // Africa
   "Algeria": "非洲", "Cape Verde": "非洲", "Egypt": "非洲", "Ghana": "非洲",
   "Ivory Coast": "非洲", "Morocco": "非洲", "Senegal": "非洲", "South Africa": "非洲",
-  "Tunisia": "非洲",
+  "Tunisia": "非洲", "Nigeria": "非洲", "Cameroon": "非洲", "DR Congo": "非洲",
+  "Mali": "非洲",
   // Asia
   "Australia": "亚洲/大洋洲", "Iran": "亚洲/大洋洲", "Japan": "亚洲/大洋洲", "Jordan": "亚洲/大洋洲",
   "Qatar": "亚洲/大洋洲", "Saudi Arabia": "亚洲/大洋洲", "South Korea": "亚洲/大洋洲",
-  "Uzbekistan": "亚洲/大洋洲", "New Zealand": "亚洲/大洋洲",
+  "Uzbekistan": "亚洲/大洋洲", "New Zealand": "亚洲/大洋洲", "Indonesia": "亚洲/大洋洲",
+  "Iraq": "亚洲/大洋洲", "China PR": "亚洲/大洋洲",
 };
 
-const continents = ["全部", "欧洲", "南美", "北美", "非洲", "亚洲/大洋洲", "待定"];
+const continents = ["全部", "欧洲", "南美", "北美", "非洲", "亚洲/大洋洲"];
 
 export function TeamsClient() {
   const [activeNav, setActiveNav] = useState("teams");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedContinent, setSelectedContinent] = useState("全部");
-  const [showPlayoffs, setShowPlayoffs] = useState(false);
 
   const navItems = [
     { id: "home", icon: Home, label: "首页", href: "/" },
@@ -72,13 +76,11 @@ export function TeamsClient() {
     const teams: { name: string; group: string; continent: string }[] = [];
     Object.entries(groupTeams).forEach(([group, teamList]) => {
       teamList.forEach((team) => {
-        if (!team.includes("Playoff")) {
-          teams.push({
-            name: team,
-            group,
-            continent: continentMapping[team] || "待定",
-          });
-        }
+        teams.push({
+          name: team,
+          group,
+          continent: continentMapping[team] || "其他",
+        });
       });
     });
     return teams.sort((a, b) => a.name.localeCompare(b.name));
@@ -280,70 +282,6 @@ export function TeamsClient() {
                     </div>
                   </Link>
                 ))}
-              </div>
-            )}
-          </section>
-
-          {/* Playoff Teams */}
-          <section>
-            <button
-              onClick={() => setShowPlayoffs(!showPlayoffs)}
-              className="flex items-center gap-3 mb-4"
-            >
-              <div className="w-1 h-5 rounded-full bg-amber-500" />
-              <h2 className="text-lg font-semibold text-foreground tracking-tight">
-                附加赛球队
-              </h2>
-              <span className="text-sm text-amber-500">6 席待定</span>
-              {showPlayoffs ? (
-                <ChevronUp className="w-4 h-4 text-muted-foreground" />
-              ) : (
-                <ChevronDown className="w-4 h-4 text-muted-foreground" />
-              )}
-            </button>
-
-            {showPlayoffs && (
-              <div className="rounded-xl bg-amber-500/5 border border-amber-500/20 p-4 mb-4">
-                <p className="text-sm text-amber-400 mb-4">
-                  以下6支参赛球队将于2026年3月通过附加赛确定
-                </p>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {Object.entries(playoffTeams).map(([key, { candidates, region }]) => (
-                    <div
-                      key={key}
-                      className="rounded-lg bg-card border border-border/40 p-4"
-                    >
-                      <div className="flex items-center gap-2 mb-3">
-                        <HelpCircle className="w-4 h-4 text-amber-500" />
-                        <span className="font-medium text-foreground text-sm">
-                          {key}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          ({region})
-                        </span>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {candidates.map((team) => (
-                          <div
-                            key={team}
-                            className="flex items-center gap-2 px-2 py-1 rounded bg-muted/30"
-                          >
-                            <img
-                              src={getFlagUrl(team, 40)}
-                              alt={team}
-                              className="w-5 h-3.5 object-cover rounded"
-                              crossOrigin="anonymous"
-                            />
-                            <span className="text-xs text-muted-foreground">
-                              {team}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
               </div>
             )}
           </section>
