@@ -28,7 +28,7 @@ const navItems = [
   { id: "about", icon: Info, label: "关于", href: "/about" },
 ];
 
-const CALENDAR_URL = "https://world-cup-calendar.vercel.app/api/calendar";
+const CALENDAR_URL = "https://worldcuptimes.vercel.app/api/calendar";
 
 export function SubscribeClient() {
   const [copied, setCopied] = useState(false);
