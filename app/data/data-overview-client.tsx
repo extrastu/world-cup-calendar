@@ -326,7 +326,7 @@ export function DataOverviewClient() {
                 </h3>
                 {Object.entries(playoffTeams)
                   .filter(([key]) => key.startsWith("UEFA"))
-                  .map(([key, { candidates }]) => (
+                  .map(([key, { candidates, assignedGroup }]) => (
                     <div key={key} className="rounded-xl glass border border-border/50 p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-8 h-5 rounded bg-blue-500/20 flex items-center justify-center">
@@ -347,7 +347,7 @@ export function DataOverviewClient() {
                         ))}
                       </div>
                       <p className="text-xs text-muted-foreground mt-3">
-                        分配小组: {Object.entries(groupTeams).find(([, teams]) => teams.includes(key))?.[0] || "TBD"}
+                        分配小组: {assignedGroup}
                       </p>
                     </div>
                   ))}
@@ -361,7 +361,7 @@ export function DataOverviewClient() {
                 </h3>
                 {Object.entries(playoffTeams)
                   .filter(([key]) => key.startsWith("IC"))
-                  .map(([key, { candidates }]) => (
+                  .map(([key, { candidates, assignedGroup }]) => (
                     <div key={key} className="rounded-xl glass border border-border/50 p-4">
                       <div className="flex items-center gap-2 mb-4">
                         <div className="w-8 h-5 rounded bg-accent/20 flex items-center justify-center">
@@ -382,7 +382,7 @@ export function DataOverviewClient() {
                         ))}
                       </div>
                       <p className="text-xs text-muted-foreground mt-3">
-                        分配小组: {Object.entries(groupTeams).find(([, teams]) => teams.includes(key))?.[0] || "TBD"}
+                        分配小组: {assignedGroup}
                       </p>
                     </div>
                   ))}

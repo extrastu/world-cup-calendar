@@ -175,6 +175,16 @@ export const groupTeams: Record<string, string[]> = {
   L: ["England", "Croatia", "Ghana", "Panama"],
 };
 
+/** UEFA + intercontinental playoff paths (March 2026); assignedGroup matches the winner’s group in this schedule. */
+export const playoffTeams: Record<string, { candidates: string[]; assignedGroup: string }> = {
+  "UEFA Path A": { candidates: ["Bosnia & Herzegovina", "Italy"], assignedGroup: "B" },
+  "UEFA Path B": { candidates: ["Sweden", "Poland"], assignedGroup: "F" },
+  "UEFA Path C": { candidates: ["Kosovo", "Turkey"], assignedGroup: "D" },
+  "UEFA Path D": { candidates: ["Czech Republic", "Denmark"], assignedGroup: "A" },
+  "IC Path 1": { candidates: ["DR Congo", "Jamaica"], assignedGroup: "K" },
+  "IC Path 2": { candidates: ["Iraq", "Bolivia"], assignedGroup: "I" },
+};
+
 export const teamCountryCodes: Record<string, string> = {
   // Group A
   "Mexico": "MX",
@@ -247,6 +257,14 @@ export const teamCountryCodes: Record<string, string> = {
   "Croatia": "HR",
   "Ghana": "GH",
   "Panama": "PA",
+
+  // Playoff-only candidates (flags)
+  "Italy": "IT",
+  "Poland": "PL",
+  "Denmark": "DK",
+  "Kosovo": "XK",
+  "Jamaica": "JM",
+  "Bolivia": "BO",
 };
 
 // 场馆信息
