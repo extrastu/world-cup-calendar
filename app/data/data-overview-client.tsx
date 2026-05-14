@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { matches, groups, groupTeams, teamCountryCodes } from "@/lib/matches-data";
+import { matches, groups, groupTeams, teamCountryCodes, playoffTeams } from "@/lib/matches-data";
 import { teamSquads, positionLabels, positionColors } from "@/lib/teams-data";
 import { convertToBeijingTime } from "@/lib/timezone";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
   ChevronDown,
   ChevronUp,
   Search,
+  HelpCircle,
 } from "lucide-react";
 
 // 获取所有场馆信息
@@ -65,7 +66,7 @@ function getFlagUrl(team: string, size: number = 80): string {
   return `https://flagcdn.com/w${size}/${flagCode}.png`;
 }
 
-type TabType = "overview" | "teams" | "venues" | "groups" | "squads";
+type TabType = "overview" | "teams" | "venues" | "groups" | "squads" | "playoffs";
 
 export function DataOverviewClient() {
   const [activeTab, setActiveTab] = useState<TabType>("overview");
@@ -76,6 +77,7 @@ export function DataOverviewClient() {
     { id: "overview", label: "数据概览", icon: <BarChart3 className="w-4 h-4" /> },
     { id: "teams", label: "48支球队", icon: <Flag className="w-4 h-4" /> },
     { id: "groups", label: "小组分布", icon: <Users className="w-4 h-4" /> },
+    { id: "playoffs", label: "附加赛", icon: <HelpCircle className="w-4 h-4" /> },
     { id: "venues", label: "比赛场馆", icon: <Building2 className="w-4 h-4" /> },
     { id: "squads", label: "球队阵容", icon: <Trophy className="w-4 h-4" /> },
   ];
@@ -253,19 +255,30 @@ export function DataOverviewClient() {
                   <h3 className="font-semibold text-foreground">小组 {group}</h3>
                 </div>
                 <div className="p-4 space-y-3">
-                  {groupTeams[group].map((team, idx) => (
-                    <div key={team} className="flex items-center gap-3">
-                      <span className="w-6 h-6 flex items-center justify-center bg-secondary rounded-full text-xs font-medium text-muted-foreground">
-                        {idx + 1}
-                      </span>
-                      <img
-                        src={getFlagUrl(team, 40)}
-                        alt={team}
-                        className="w-8 h-5 object-cover rounded shadow-sm"
-                      />
-                      <span className="text-sm font-medium text-foreground">{team}</span>
-                    </div>
-                  ))}
+                  {groupTeams[group].map((team, idx) => {
+                    const isPlayoff = team.includes("Playoff");
+                    return (
+                      <div key={team} className="flex items-center gap-3">
+                        <span className="w-6 h-6 flex items-center justify-center bg-secondary rounded-full text-xs font-medium text-muted-foreground">
+                          {idx + 1}
+                        </span>
+                        {isPlayoff ? (
+                          <div className="w-8 h-5 bg-muted rounded shadow-sm flex items-center justify-center">
+                            <HelpCircle className="w-4 h-4 text-muted-foreground" />
+                          </div>
+                        ) : (
+                          <img
+                            src={getFlagUrl(team, 40)}
+                            alt={team}
+                            className="w-8 h-5 object-cover rounded shadow-sm"
+                          />
+                        )}
+                        <span className={`text-sm font-medium ${isPlayoff ? "text-muted-foreground" : "text-foreground"}`}>
+                          {team}
+                        </span>
+                      </div>
+                    );
+                  })}
                 </div>
                 <div className="px-4 py-3 bg-secondary/50 border-t border-border">
                   <Link href={`/?group=${group}`}>
@@ -276,6 +289,89 @@ export function DataOverviewClient() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Playoffs Tab */}
+        {activeTab === "playoffs" && (
+          <div className="space-y-6">
+            <div className="bg-amber-500/10 border border-amber-500/30 rounded-xl p-4">
+              <p className="text-sm text-amber-700 dark:text-amber-400">
+                以下6支参赛球队将于2026年3月通过附加赛确定。当前显示为候选球队。
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* UEFA Playoffs */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-primary" />
+                  欧洲区附加赛 (UEFA)
+                </h3>
+                {Object.entries(playoffTeams)
+                  .filter(([key]) => key.startsWith("UEFA"))
+                  .map(([key, { candidates }]) => (
+                    <div key={key} className="bg-card border border-border rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-5 bg-blue-500/20 rounded flex items-center justify-center">
+                          <span className="text-xs font-bold text-blue-600 dark:text-blue-400">EU</span>
+                        </div>
+                        <span className="font-medium text-foreground">{key}</span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        {candidates.map((team) => (
+                          <div key={team} className="flex items-center gap-2 p-2 bg-secondary/50 rounded-lg">
+                            <img
+                              src={getFlagUrl(team, 40)}
+                              alt={team}
+                              className="w-6 h-4 object-cover rounded"
+                            />
+                            <span className="text-sm text-foreground">{team}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        分配小组: {Object.entries(groupTeams).find(([, teams]) => teams.includes(key))?.[0] || "TBD"}
+                      </p>
+                    </div>
+                  ))}
+              </div>
+
+              {/* Intercontinental Playoffs */}
+              <div className="space-y-4">
+                <h3 className="font-semibold text-foreground flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-accent" />
+                  洲际附加赛 (Intercontinental)
+                </h3>
+                {Object.entries(playoffTeams)
+                  .filter(([key]) => key.startsWith("IC"))
+                  .map(([key, { candidates }]) => (
+                    <div key={key} className="bg-card border border-border rounded-xl p-4">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-8 h-5 bg-emerald-500/20 rounded flex items-center justify-center">
+                          <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">IC</span>
+                        </div>
+                        <span className="font-medium text-foreground">{key}</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-2">
+                        {candidates.map((team) => (
+                          <div key={team} className="flex items-center gap-2 p-2 bg-secondary/50 rounded-lg">
+                            <img
+                              src={getFlagUrl(team, 40)}
+                              alt={team}
+                              className="w-6 h-4 object-cover rounded"
+                            />
+                            <span className="text-sm text-foreground">{team}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-3">
+                        分配小组: {Object.entries(groupTeams).find(([, teams]) => teams.includes(key))?.[0] || "TBD"}
+                      </p>
+                    </div>
+                  ))}
+              </div>
+            </div>
           </div>
         )}
 
