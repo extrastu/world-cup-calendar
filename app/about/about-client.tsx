@@ -211,7 +211,7 @@ export function AboutClient() {
               </p>
               <div className="flex flex-wrap gap-3">
                 <a
-                  href="https://github.com"
+                  href="https://github.com/extrastu/world-cup-calendar"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-muted/50 hover:bg-muted/70 transition-colors text-sm"
