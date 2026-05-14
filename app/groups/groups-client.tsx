@@ -18,8 +18,13 @@ import {
 function getFlagUrl(team: string, size: number = 80): string {
   const code = teamCountryCodes[team];
   if (!code) return "";
-  const flagCode = code.toLowerCase().replace("gb-", "");
-  return `https://flagcdn.com/w${size}/${flagCode}.png`;
+  if (code === "GB-SCT") return `https://flagcdn.com/w${size}/gb-sct.png`;
+  if (code === "GB-ENG") return `https://flagcdn.com/w${size}/gb-eng.png`;
+  if (code === "GB-WLS") return `https://flagcdn.com/w${size}/gb-wls.png`;
+  if (code === "GB-NIR") return `https://flagcdn.com/w${size}/gb-nir.png`;
+  if (code === "EU") return "https://flagcdn.com/w160/eu.png";
+  if (code === "UN") return "https://flagcdn.com/w160/un.png";
+  return `https://flagcdn.com/w${size}/${code.toLowerCase()}.png`;
 }
 
 export function GroupsClient() {

@@ -19,6 +19,10 @@ function getFlagUrl(team: string): string {
   if (!code) return "";
   if (code === "GB-SCT") return "https://flagcdn.com/w80/gb-sct.png";
   if (code === "GB-ENG") return "https://flagcdn.com/w80/gb-eng.png";
+  if (code === "GB-WLS") return "https://flagcdn.com/w80/gb-wls.png";
+  if (code === "GB-NIR") return "https://flagcdn.com/w80/gb-nir.png";
+  if (code === "EU") return "https://flagcdn.com/w160/eu.png";
+  if (code === "UN") return "https://flagcdn.com/w160/un.png";
   return `https://flagcdn.com/w80/${code.toLowerCase()}.png`;
 }
 
