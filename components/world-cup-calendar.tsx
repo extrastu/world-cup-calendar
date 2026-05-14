@@ -327,11 +327,39 @@ export function WorldCupCalendar() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-12 py-6">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p className="font-medium text-foreground">CupCalendar</p>
-          <p className="mt-1">2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间</p>
-          <p className="mt-1">48 Teams · 104 Matches · 16 Cities | USA · Canada · Mexico</p>
+      <footer className="border-t border-border mt-12 py-8">
+        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-4">
+          <div>
+            <p className="font-medium text-foreground text-lg">CupCalendar</p>
+            <p className="mt-1">2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间</p>
+            <p className="mt-1">48 Teams · 104 Matches · 16 Cities | USA · Canada · Mexico</p>
+          </div>
+          
+          <div className="border-t border-border pt-4">
+            <p className="text-xs">
+              Built with{" "}
+              <a 
+                href="https://v0.app/ref/938XEW" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                v0 by Vercel
+              </a>
+              {" "}· Deployed on{" "}
+              <a 
+                href="https://vercel.com" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                Vercel
+              </a>
+            </p>
+            <p className="text-xs mt-2 text-muted-foreground/70">
+              Data from FIFA Official | For reference only | 数据来源 FIFA 官方，仅供参考
+            </p>
+          </div>
         </div>
       </footer>
     </div>
