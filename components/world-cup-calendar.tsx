@@ -97,7 +97,7 @@ export function WorldCupCalendar() {
                 <span className="text-balance">2026 FIFA 世界杯</span>
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                美国 · 加拿大 · 墨西哥 | 2026年6月11日 - 7月19日
+                美国 · 加拿大 · 墨西哥 | 所有时间均为北京时间
               </p>
             </div>
 
@@ -319,7 +319,7 @@ export function WorldCupCalendar() {
       {/* Footer */}
       <footer className="border-t border-border mt-12 py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>数据来源: FIFA 官方 | 所有时间为美国东部时间 (ET)</p>
+          <p>数据来源: FIFA 官方 | 所有时间均为北京时间 (UTC+8)</p>
           <p className="mt-1">共 48 支球队 · 104 场比赛 · 16 座城市</p>
         </div>
       </footer>

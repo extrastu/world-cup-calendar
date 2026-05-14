@@ -1,6 +1,7 @@
 "use client";
 
 import { Match, teamCountryCodes } from "@/lib/matches-data";
+import { convertToBeijingTime, getTimeOfDay } from "@/lib/timezone";
 import { MapPin, Clock, Calendar } from "lucide-react";
 import Link from "next/link";
 
@@ -47,6 +48,11 @@ export function MatchCard({ match }: MatchCardProps) {
   const homeFlag = getFlagUrl(match.homeTeam);
   const awayFlag = getFlagUrl(match.awayTeam);
   const isTBD = match.homeTeam.includes("W ") || match.homeTeam.includes("L ") || match.homeTeam.match(/^\d/);
+  
+  // 转换为北京时间
+  const beijingTime = convertToBeijingTime(match.date, match.time);
+  const timeOfDay = getTimeOfDay(beijingTime.time);
+  const [bjYear, bjMonth, bjDay] = beijingTime.date.split("-").map(Number);
 
   return (
     <Link href={`/match/${match.id}`} className="block">
@@ -112,11 +118,12 @@ export function MatchCard({ match }: MatchCardProps) {
       <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
           <Calendar className="w-3.5 h-3.5" />
-          <span>{new Date(match.date).toLocaleDateString("zh-CN", { month: "short", day: "numeric" })}</span>
+          <span>{bjMonth}月{bjDay}日</span>
         </div>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
-          <span>{match.time} ET</span>
+          <span className="font-medium text-foreground">{beijingTime.time}</span>
+          <span className="text-muted-foreground/70">{timeOfDay}</span>
         </div>
         {match.venue !== "TBD" && (
           <div className="flex items-center gap-1">

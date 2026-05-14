@@ -2,6 +2,7 @@
 
 import { Match, teamCountryCodes } from "@/lib/matches-data";
 import { teamSquads, positionLabels, positionColors, Player } from "@/lib/teams-data";
+import { convertToBeijingTime, getTimeOfDay, formatBeijingDate } from "@/lib/timezone";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Clock, Calendar, Users, Trophy, Download, Star } from "lucide-react";
 import Link from "next/link";
@@ -111,6 +112,11 @@ export function MatchDetailClient({ match }: MatchDetailClientProps) {
   const homeFlag = getFlagUrl(match.homeTeam, 160);
   const awayFlag = getFlagUrl(match.awayTeam, 160);
   const isTBD = match.homeTeam.includes("W ") || match.homeTeam.includes("L ") || match.homeTeam.match(/^\d/);
+
+  // 转换为北京时间
+  const beijingTime = convertToBeijingTime(match.date, match.time);
+  const timeOfDay = getTimeOfDay(beijingTime.time);
+  const bjDateDisplay = formatBeijingDate(beijingTime);
 
   const handleAddToCalendar = () => {
     // 生成单场比赛的 ICS 文件
@@ -223,18 +229,12 @@ END:VCALENDAR`;
           <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-sm md:text-base text-muted-foreground">
             <div className="flex items-center gap-2">
               <Calendar className="w-5 h-5 text-primary" />
-              <span>
-                {new Date(match.date).toLocaleDateString("zh-CN", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                  weekday: "long",
-                })}
-              </span>
+              <span>{bjDateDisplay}</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="w-5 h-5 text-primary" />
-              <span>{match.time} ET (美东时间)</span>
+              <span className="font-medium text-foreground">{beijingTime.time}</span>
+              <span className="text-muted-foreground">{timeOfDay} 北京时间</span>
             </div>
             {match.venue !== "TBD" && (
               <div className="flex items-center gap-2">
