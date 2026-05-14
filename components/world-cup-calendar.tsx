@@ -4,7 +4,8 @@ import { useState, useMemo } from "react";
 import { matches, groups, Match } from "@/lib/matches-data";
 import { MatchCard } from "@/components/match-card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Trophy, Users, Filter, ChevronLeft, ChevronRight, CalendarPlus } from "lucide-react";
+import { Calendar, Trophy, Users, Filter, ChevronLeft, ChevronRight, CalendarPlus, Database } from "lucide-react";
+import Link from "next/link";
 
 type ViewMode = "calendar" | "group" | "knockout";
 type StageFilter = "all" | Match["stage"];
@@ -102,6 +103,15 @@ export function WorldCupCalendar() {
             </div>
 
             <div className="flex items-center gap-3">
+              {/* Data Overview Link */}
+              <Link
+                href="/data"
+                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+              >
+                <Database className="w-4 h-4" />
+                <span className="hidden sm:inline">数据总览</span>
+              </Link>
+
               {/* Subscribe to Calendar */}
               <a
                 href="/api/calendar"
