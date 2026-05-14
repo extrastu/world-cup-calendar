@@ -303,13 +303,12 @@ export function WorldCupCalendar() {
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
             订阅日历，开赛前收到提醒
           </p>
-          <a
-            href="/api/calendar"
-            download="fifa-world-cup-2026.ics"
+          <Link
+            href="/subscribe"
             className="block w-full text-center px-3 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
           >
             立即订阅
-          </a>
+          </Link>
         </div>
 
         {/* Footer */}
@@ -338,13 +337,12 @@ export function WorldCupCalendar() {
               >
                 <Database className="w-5 h-5 text-muted-foreground" />
               </Link>
-              <a
-                href="/api/calendar"
-                download="fifa-world-cup-2026.ics"
+              <Link
+                href="/subscribe"
                 className="p-2 rounded-lg bg-accent text-accent-foreground"
               >
                 <CalendarPlus className="w-5 h-5" />
-              </a>
+              </Link>
             </div>
           </div>
         </header>
@@ -401,14 +399,13 @@ export function WorldCupCalendar() {
                   <Share2 className="w-4 h-4" />
                   <span className="text-sm font-medium">分享</span>
                 </button>
-                <a
-                  href="/api/calendar"
-                  download="fifa-world-cup-2026.ics"
+                <Link
+                  href="/subscribe"
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors font-medium"
                 >
                   <CalendarPlus className="w-4 h-4" />
                   <span className="text-sm">订阅日历</span>
-                </a>
+                </Link>
               </div>
             </div>
 
