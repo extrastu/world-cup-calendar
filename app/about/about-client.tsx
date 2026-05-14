@@ -9,6 +9,7 @@ import {
   Users,
   Info,
   CalendarPlus,
+  HelpCircle,
   ArrowLeft,
   Github,
   Mail,
@@ -23,41 +24,42 @@ export function AboutClient() {
     { id: "matches", icon: Calendar, label: "赛程", href: "/matches" },
     { id: "teams", icon: Users, label: "球队", href: "/teams" },
     { id: "groups", icon: Trophy, label: "小组", href: "/groups" },
+    { id: "help", icon: HelpCircle, label: "帮助", href: "/help" },
     { id: "about", icon: Info, label: "关于", href: "/about" },
   ];
 
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Sidebar */}
-      <aside className="hidden lg:flex flex-col w-56 border-r border-border/50 bg-card/20 sticky top-0 h-screen overflow-y-auto">
+      <aside className="hidden lg:flex flex-col w-60 border-r border-border/40 bg-sidebar sticky top-0 h-screen overflow-y-auto">
         {/* Logo */}
-        <div className="p-6 border-b border-border/50">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent/80 to-accent flex items-center justify-center">
-              <Trophy className="w-4 h-4 text-accent-foreground" />
+        <div className="p-5 border-b border-border/40">
+          <Link href="/" className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-lg bg-accent flex items-center justify-center">
+              <Trophy className="w-5 h-5 text-accent-foreground" />
             </div>
             <div>
-              <h1 className="font-semibold text-foreground">CupCalendar</h1>
-              <p className="text-xs text-muted-foreground">FIFA 2026</p>
+              <h1 className="font-semibold text-foreground tracking-tight">CupCalendar</h1>
+              <p className="text-[11px] text-muted-foreground">FIFA World Cup 2026</p>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Main Navigation */}
-        <nav className="flex-1 p-4">
-          <div className="space-y-1">
+        <nav className="flex-1 p-3">
+          <div className="space-y-0.5">
             {navItems.map((item) => (
               <Link
                 key={item.id}
                 href={item.href}
                 onClick={() => setActiveNav(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   activeNav === item.id
-                    ? "bg-muted/50 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
+                    ? "bg-accent/10 text-accent"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                 }`}
               >
-                <item.icon className="w-4 h-4" />
+                <item.icon className="w-[18px] h-[18px]" />
                 <span>{item.label}</span>
               </Link>
             ))}
@@ -65,14 +67,14 @@ export function AboutClient() {
         </nav>
 
         {/* Subscribe CTA */}
-        <div className="p-4 m-4 rounded-xl bg-card/50 border border-border/50">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-muted/50 mb-3">
-            <CalendarPlus className="w-5 h-5 text-muted-foreground" />
+        <div className="p-3 mx-3 mb-3 rounded-xl bg-muted/30 border border-border/40">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-accent/10 mb-3">
+            <CalendarPlus className="w-5 h-5 text-accent" />
           </div>
           <h3 className="font-medium text-foreground text-sm mb-1">
             不错过任何比赛
           </h3>
-          <p className="text-xs text-muted-foreground mb-3">
+          <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
             订阅日历，开赛前收到提醒
           </p>
           <Link
@@ -84,17 +86,17 @@ export function AboutClient() {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-border/50">
-          <p className="text-xs text-muted-foreground">
+        <div className="px-5 py-4 border-t border-border/40">
+          <p className="text-[11px] text-muted-foreground">
             &copy; 2026 CupCalendar
           </p>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+      <div className="flex-1 min-w-0">
         {/* Mobile Header */}
-        <header className="lg:hidden sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
+        <header className="lg:hidden sticky top-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/40">
           <div className="flex items-center justify-between px-4 py-3">
             <Link href="/" className="flex items-center gap-2">
               <ArrowLeft className="w-5 h-5 text-muted-foreground" />
@@ -104,7 +106,7 @@ export function AboutClient() {
         </header>
 
         {/* Content */}
-        <div className="flex-1 px-4 md:px-8 py-8 max-w-3xl">
+        <div className="max-w-3xl mx-auto px-6 md:px-10 py-10 md:py-16">
           <h1 className="text-3xl font-bold text-foreground mb-8">关于 CupCalendar</h1>
 
           {/* Project Description */}
