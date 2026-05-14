@@ -227,6 +227,17 @@ export function AboutClient() {
             <div className="text-center text-sm text-muted-foreground py-8 border-t border-border/50">
               <p>&copy; 2026 CupCalendar. 保留所有权利。</p>
               <p className="mt-2">Made with passion for football fans.</p>
+              <p className="mt-2">
+                Built with{" "}
+                <a
+                  href="https://v0.app/ref/938XEW"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-accent hover:underline"
+                >
+                  v0.dev
+                </a>
+              </p>
             </div>
           </section>
         </div>
