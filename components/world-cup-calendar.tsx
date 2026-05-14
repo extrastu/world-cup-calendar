@@ -355,6 +355,15 @@ export function WorldCupCalendar() {
               >
                 Vercel
               </a>
+              {" "}· Open Source on{" "}
+              <a 
+                href="https://github.com/extrastu/world-cup-calendar" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-primary hover:underline font-medium"
+              >
+                GitHub
+              </a>
             </p>
             <p className="text-xs mt-2 text-muted-foreground/70">
               Data from FIFA Official | For reference only | 数据来源 FIFA 官方，仅供参考
