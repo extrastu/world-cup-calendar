@@ -1,56 +1,100 @@
 // 美东夏令时 (EDT) 为 UTC-4，北京时间为 UTC+8，时差为12小时
 // 2026年世界杯期间（6月11日-7月19日）处于美国夏令时期间
 
-export interface BeijingTime {
+export interface ConvertedTime {
   date: string; // YYYY-MM-DD format
   time: string; // HH:mm format
   isNextDay: boolean; // 是否跨天到第二天
 }
 
+// Keep BeijingTime as alias for backward compatibility
+export type BeijingTime = ConvertedTime;
+
+export interface TimezoneOption {
+  id: string;
+  label: string;
+  offset: number; // hours offset from EDT (source timezone)
+}
+
+export const timezoneOptions: TimezoneOption[] = [
+  { id: "beijing", label: "北京时间 (GMT+8)", offset: 12 },
+  { id: "tokyo", label: "东京时间 (GMT+9)", offset: 13 },
+  { id: "singapore", label: "新加坡时间 (GMT+8)", offset: 12 },
+  { id: "london", label: "伦敦时间 (GMT+1)", offset: 5 },
+  { id: "paris", label: "巴黎时间 (GMT+2)", offset: 6 },
+  { id: "new_york", label: "纽约时间 (GMT-4)", offset: 0 },
+  { id: "los_angeles", label: "洛杉矶时间 (GMT-7)", offset: -3 },
+];
+
 /**
- * 将美东时间转换为北京时间
+ * 将美东时间转换为指定时区时间
+ * @param date 日期 YYYY-MM-DD
+ * @param time 时间 HH:mm (美东时间)
+ * @param offsetHours 时区偏移小时数 (默认12小时为北京时间)
+ * @returns 转换后的时间
+ */
+export function convertToTimezone(date: string, time: string, offsetHours: number = 12): ConvertedTime {
+  const [year, month, day] = date.split("-").map(Number);
+  const [hours, minutes] = time.split(":").map(Number);
+  
+  let newHours = hours + offsetHours;
+  let newDay = day;
+  let newMonth = month;
+  let newYear = year;
+  let isNextDay = false;
+  
+  // Handle day overflow
+  while (newHours >= 24) {
+    newHours -= 24;
+    isNextDay = true;
+    
+    const daysInMonth = new Date(year, month, 0).getDate();
+    newDay += 1;
+    
+    if (newDay > daysInMonth) {
+      newDay = 1;
+      newMonth += 1;
+      
+      if (newMonth > 12) {
+        newMonth = 1;
+        newYear += 1;
+      }
+    }
+  }
+  
+  // Handle day underflow (negative offset)
+  while (newHours < 0) {
+    newHours += 24;
+    newDay -= 1;
+    
+    if (newDay < 1) {
+      newMonth -= 1;
+      if (newMonth < 1) {
+        newMonth = 12;
+        newYear -= 1;
+      }
+      newDay = new Date(newYear, newMonth, 0).getDate();
+    }
+  }
+  
+  const newDate = `${newYear}-${newMonth.toString().padStart(2, "0")}-${newDay.toString().padStart(2, "0")}`;
+  const newTime = `${newHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+  
+  return {
+    date: newDate,
+    time: newTime,
+    isNextDay,
+  };
+}
+
+/**
+ * 将美东时间转换为北京时间 (backward compatible)
  * @param date 日期 YYYY-MM-DD
  * @param time 时间 HH:mm (美东时间)
  * @returns 北京时间
  */
 export function convertToBeijingTime(date: string, time: string): BeijingTime {
-  const [year, month, day] = date.split("-").map(Number);
-  const [hours, minutes] = time.split(":").map(Number);
-  
-  // 美东夏令时 UTC-4 转北京时间 UTC+8，加12小时
-  let beijingHours = hours + 12;
-  let beijingDay = day;
-  let beijingMonth = month;
-  let beijingYear = year;
-  let isNextDay = false;
-  
-  if (beijingHours >= 24) {
-    beijingHours -= 24;
-    isNextDay = true;
-    
-    // 处理跨天
-    const daysInMonth = new Date(year, month, 0).getDate();
-    beijingDay += 1;
-    
-    if (beijingDay > daysInMonth) {
-      beijingDay = 1;
-      beijingMonth += 1;
-      
-      if (beijingMonth > 12) {
-        beijingMonth = 1;
-        beijingYear += 1;
-      }
-    }
-  }
-  
-  const beijingDate = `${beijingYear}-${beijingMonth.toString().padStart(2, "0")}-${beijingDay.toString().padStart(2, "0")}`;
-  const beijingTime = `${beijingHours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
-  
-  return {
-    date: beijingDate,
-    time: beijingTime,
-    isNextDay,
-  };
+  return convertToTimezone(date, time, 12);
 }
 
 /**
