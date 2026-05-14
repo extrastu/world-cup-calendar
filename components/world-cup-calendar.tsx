@@ -19,8 +19,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-type ViewMode = "calendar" | "group" | "knockout";
-
 function getFlagUrl(team: string): string {
   const code = teamCountryCodes[team];
   if (!code) return "";
@@ -187,7 +185,6 @@ function TonightMatchCard({ match }: { match: Match }) {
 }
 
 export function WorldCupCalendar() {
-  const [viewMode, setViewMode] = useState<ViewMode>("calendar");
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState("home");
@@ -204,13 +201,9 @@ export function WorldCupCalendar() {
   const filteredMatches = useMemo(() => {
     let result = matches;
 
-    if (viewMode === "group") {
-      result = result.filter((m) => m.stage === "group");
-      if (selectedGroup) {
-        result = result.filter((m) => m.group === selectedGroup);
-      }
-    } else if (viewMode === "knockout") {
-      result = result.filter((m) => m.stage !== "group");
+    // Filter by group if selected
+    if (selectedGroup) {
+      result = result.filter((m) => m.group === selectedGroup);
     }
 
     if (selectedDate) {
@@ -218,7 +211,7 @@ export function WorldCupCalendar() {
     }
 
     return result;
-  }, [viewMode, selectedGroup, selectedDate]);
+  }, [selectedGroup, selectedDate]);
 
   const navItems = [
     { id: "home", icon: Home, label: "首页", href: "/" },
