@@ -4,22 +4,11 @@ import { useState, useMemo } from "react";
 import { matches, groups, Match } from "@/lib/matches-data";
 import { MatchCard } from "@/components/match-card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Trophy, Users, Filter, ChevronLeft, ChevronRight, CalendarPlus, Database } from "lucide-react";
+import { Calendar, Trophy, Users, ChevronLeft, ChevronRight, CalendarPlus, Database } from "lucide-react";
 import Link from "next/link";
 
 type ViewMode = "calendar" | "group" | "knockout";
 type StageFilter = "all" | Match["stage"];
-
-const stageFilters: { value: StageFilter; label: string }[] = [
-  { value: "all", label: "全部" },
-  { value: "group", label: "小组赛" },
-  { value: "round-of-32", label: "32强" },
-  { value: "round-of-16", label: "16强" },
-  { value: "quarter-final", label: "1/4决赛" },
-  { value: "semi-final", label: "半决赛" },
-  { value: "third-place", label: "三四名" },
-  { value: "final", label: "决赛" },
-];
 
 export function WorldCupCalendar() {
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
@@ -87,200 +76,231 @@ export function WorldCupCalendar() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2">
-                <Trophy className="w-7 h-7 text-accent" />
-                <span className="text-balance">CupCalendar</span>
-              </h1>
-              <p className="text-muted-foreground text-sm mt-1">
-                2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间
-              </p>
+    <div className="min-h-screen bg-background relative">
+      {/* Ambient background glow */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-20%] left-[10%] w-[600px] h-[600px] rounded-full bg-accent/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[5%] w-[500px] h-[500px] rounded-full bg-blue-500/5 blur-[100px]" />
+      </div>
+
+      {/* Header - Glassmorphism navigation */}
+      <header className="sticky top-0 z-50 glass-strong border-b border-border/50">
+        <div className="container mx-auto px-6 py-5">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            {/* Logo & Title */}
+            <div className="flex items-center gap-4">
+              <div className="relative">
+                <div className="absolute inset-0 bg-accent/20 blur-xl rounded-full" />
+                <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-accent/80 to-accent flex items-center justify-center">
+                  <Trophy className="w-6 h-6 text-accent-foreground" />
+                </div>
+              </div>
+              <div>
+                <h1 className="text-2xl font-semibold tracking-tight text-foreground">
+                  CupCalendar
+                </h1>
+                <p className="text-sm text-muted-foreground tracking-wide">
+                  2026 FIFA World Cup · Beijing Time
+                </p>
+              </div>
             </div>
 
-            <div className="flex items-center gap-3">
-              {/* Data Overview Link */}
+            {/* Navigation */}
+            <div className="flex items-center gap-3 flex-wrap">
+              {/* Data Overview */}
               <Link
                 href="/data"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl glass border border-border/50 text-muted-foreground hover:text-foreground hover:border-border transition-all"
               >
                 <Database className="w-4 h-4" />
                 <span className="hidden sm:inline">数据总览</span>
               </Link>
 
-              {/* Subscribe to Calendar */}
+              {/* Subscribe */}
               <a
                 href="/api/calendar"
                 download="fifa-world-cup-2026.ics"
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl bg-accent text-accent-foreground hover:bg-accent/90 transition-all glow-accent"
               >
                 <CalendarPlus className="w-4 h-4" />
                 <span className="hidden sm:inline">订阅日历</span>
               </a>
 
               {/* View Mode Tabs */}
-              <div className="flex items-center gap-2 bg-secondary rounded-lg p-1">
-              <Button
-                variant={viewMode === "calendar" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setViewMode("calendar");
-                  setSelectedGroup(null);
-                  setStageFilter("all");
-                }}
-                className="gap-1.5"
-              >
-                <Calendar className="w-4 h-4" />
-                日历
-              </Button>
-              <Button
-                variant={viewMode === "group" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setViewMode("group");
-                  setStageFilter("all");
-                }}
-                className="gap-1.5"
-              >
-                <Users className="w-4 h-4" />
-                小组
-              </Button>
-              <Button
-                variant={viewMode === "knockout" ? "default" : "ghost"}
-                size="sm"
-                onClick={() => {
-                  setViewMode("knockout");
-                  setSelectedGroup(null);
-                  setStageFilter("all");
-                }}
-                className="gap-1.5"
-              >
-                <Trophy className="w-4 h-4" />
-                淘汰赛
-              </Button>
+              <div className="flex items-center gap-1 p-1 rounded-xl glass border border-border/50">
+                <button
+                  onClick={() => {
+                    setViewMode("calendar");
+                    setSelectedGroup(null);
+                    setStageFilter("all");
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                    viewMode === "calendar"
+                      ? "bg-foreground/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span className="hidden sm:inline">日历</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode("group");
+                    setStageFilter("all");
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                    viewMode === "group"
+                      ? "bg-foreground/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Users className="w-4 h-4" />
+                  <span className="hidden sm:inline">小组</span>
+                </button>
+                <button
+                  onClick={() => {
+                    setViewMode("knockout");
+                    setSelectedGroup(null);
+                    setStageFilter("all");
+                  }}
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+                    viewMode === "knockout"
+                      ? "bg-foreground/10 text-foreground"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Trophy className="w-4 h-4" />
+                  <span className="hidden sm:inline">淘汰赛</span>
+                </button>
               </div>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-6">
-        {/* Filters */}
-        <div className="mb-6 space-y-4">
-          {/* Group Filter (only in group view) */}
+      <main className="container mx-auto px-6 py-8 relative">
+        {/* Filters Section */}
+        <div className="mb-8 space-y-4">
+          {/* Group Filter */}
           {viewMode === "group" && (
             <div className="flex flex-wrap gap-2">
-              <Button
-                variant={selectedGroup === null ? "default" : "outline"}
-                size="sm"
+              <button
                 onClick={() => setSelectedGroup(null)}
+                className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                  selectedGroup === null
+                    ? "bg-foreground text-background"
+                    : "glass border border-border/50 text-muted-foreground hover:text-foreground"
+                }`}
               >
                 全部小组
-              </Button>
+              </button>
               {groups.map((group) => (
-                <Button
+                <button
                   key={group}
-                  variant={selectedGroup === group ? "default" : "outline"}
-                  size="sm"
                   onClick={() => setSelectedGroup(group)}
+                  className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                    selectedGroup === group
+                      ? "bg-foreground text-background"
+                      : "glass border border-border/50 text-muted-foreground hover:text-foreground"
+                  }`}
                 >
                   {group}组
-                </Button>
+                </button>
               ))}
             </div>
           )}
 
-          {/* Stage Filter (in knockout view) */}
+          {/* Stage Filter */}
           {viewMode === "knockout" && (
             <div className="flex flex-wrap gap-2">
-              {stageFilters
-                .filter((s) => s.value !== "group" && s.value !== "all")
-                .map((stage) => (
-                  <Button
-                    key={stage.value}
-                    variant={stageFilter === stage.value ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setStageFilter(stage.value)}
-                  >
-                    {stage.label}
-                  </Button>
-                ))}
-              <Button
-                variant={stageFilter === "all" ? "default" : "outline"}
-                size="sm"
-                onClick={() => setStageFilter("all")}
-              >
-                全部
-              </Button>
+              {[
+                { value: "all", label: "全部" },
+                { value: "round-of-32", label: "32强" },
+                { value: "round-of-16", label: "16强" },
+                { value: "quarter-final", label: "1/4决赛" },
+                { value: "semi-final", label: "半决赛" },
+                { value: "third-place", label: "三四名" },
+                { value: "final", label: "决赛" },
+              ].map((stage) => (
+                <button
+                  key={stage.value}
+                  onClick={() => setStageFilter(stage.value as StageFilter)}
+                  className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                    stageFilter === stage.value
+                      ? "bg-foreground text-background"
+                      : "glass border border-border/50 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {stage.label}
+                </button>
+              ))}
             </div>
           )}
 
-          {/* Date Navigation (in calendar view) */}
+          {/* Date Navigation - Horizontal scroll timeline */}
           {viewMode === "calendar" && (
-            <div className="flex items-center gap-2 overflow-x-auto pb-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setSelectedDate(null)}
-                className={selectedDate === null ? "bg-primary text-primary-foreground" : ""}
-              >
-                <Filter className="w-4 h-4 mr-1" />
-                全部日期
-              </Button>
-              <div className="h-6 w-px bg-border" />
-              {selectedDate && (
-                <div className="flex items-center gap-1">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={goToPrevDate}
-                    disabled={currentDateIndex <= 0}
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </Button>
-                  <span className="text-sm font-medium min-w-[100px] text-center">
-                    {new Date(selectedDate).toLocaleDateString("zh-CN", {
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={goToNextDate}
-                    disabled={currentDateIndex >= uniqueDates.length - 1}
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </Button>
-                </div>
-              )}
-              {!selectedDate && (
-                <div className="flex gap-1.5 overflow-x-auto">
-                  {uniqueDates.slice(0, 10).map((date) => (
-                    <Button
-                      key={date}
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setSelectedDate(date)}
-                      className="whitespace-nowrap text-xs"
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setSelectedDate(null)}
+                  className={`px-4 py-2 text-sm font-medium rounded-xl transition-all ${
+                    selectedDate === null
+                      ? "bg-foreground text-background"
+                      : "glass border border-border/50 text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  全部日期
+                </button>
+                
+                {selectedDate && (
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={goToPrevDate}
+                      disabled={currentDateIndex <= 0}
+                      className="w-9 h-9 rounded-lg glass border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-30 transition-all"
                     >
-                      {new Date(date).toLocaleDateString("zh-CN", {
-                        month: "short",
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <span className="text-lg font-semibold min-w-[140px] text-center">
+                      {new Date(selectedDate).toLocaleDateString("zh-CN", {
+                        month: "long",
                         day: "numeric",
                       })}
-                    </Button>
-                  ))}
-                  {uniqueDates.length > 10 && (
-                    <span className="text-muted-foreground text-sm self-center px-2">
-                      +{uniqueDates.length - 10} 天
                     </span>
-                  )}
+                    <button
+                      onClick={goToNextDate}
+                      disabled={currentDateIndex >= uniqueDates.length - 1}
+                      className="w-9 h-9 rounded-lg glass border border-border/50 flex items-center justify-center text-muted-foreground hover:text-foreground disabled:opacity-30 transition-all"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+              </div>
+              
+              {/* Horizontal scrollable date timeline */}
+              {!selectedDate && (
+                <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                  {uniqueDates.map((date) => {
+                    const d = new Date(date);
+                    return (
+                      <button
+                        key={date}
+                        onClick={() => setSelectedDate(date)}
+                        className="flex-shrink-0 px-4 py-3 rounded-xl glass border border-border/50 hover:border-accent/50 transition-all group"
+                      >
+                        <div className="text-xs text-muted-foreground group-hover:text-accent transition-colors">
+                          {d.toLocaleDateString("zh-CN", { month: "short" })}
+                        </div>
+                        <div className="text-xl font-semibold text-foreground">
+                          {d.getDate()}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          {d.toLocaleDateString("zh-CN", { weekday: "short" })}
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -288,31 +308,37 @@ export function WorldCupCalendar() {
         </div>
 
         {/* Match Count */}
-        <div className="mb-4 text-sm text-muted-foreground">
-          共 {filteredMatches.length} 场比赛
+        <div className="mb-6 flex items-baseline gap-2">
+          <span className="text-4xl font-bold tracking-tight">{filteredMatches.length}</span>
+          <span className="text-lg text-muted-foreground">场比赛</span>
         </div>
 
         {/* Matches Grid */}
         {sortedDates.length === 0 ? (
-          <div className="text-center py-12 text-muted-foreground">
-            暂无符合条件的比赛
+          <div className="text-center py-24">
+            <div className="text-6xl mb-4 opacity-20">⚽</div>
+            <p className="text-xl text-muted-foreground">暂无符合条件的比赛</p>
           </div>
         ) : (
-          <div className="space-y-8">
+          <div className="space-y-12">
             {sortedDates.map((date) => (
               <section key={date}>
-                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2 text-foreground">
-                  <Calendar className="w-5 h-5 text-primary" />
-                  {new Date(date).toLocaleDateString("zh-CN", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    weekday: "long",
-                  })}
-                  <span className="text-sm font-normal text-muted-foreground">
-                    ({matchesByDate[date].length}场)
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-accent" />
+                    <h2 className="text-xl font-semibold tracking-tight">
+                      {new Date(date).toLocaleDateString("zh-CN", {
+                        month: "long",
+                        day: "numeric",
+                        weekday: "long",
+                      })}
+                    </h2>
+                  </div>
+                  <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  <span className="text-sm text-muted-foreground font-medium">
+                    {matchesByDate[date].length} 场
                   </span>
-                </h2>
+                </div>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {matchesByDate[date]
                     .sort((a, b) => a.time.localeCompare(b.time))
@@ -326,48 +352,43 @@ export function WorldCupCalendar() {
         )}
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border mt-12 py-8">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground space-y-4">
-          <div>
-            <p className="font-medium text-foreground text-lg">CupCalendar</p>
-            <p className="mt-1">2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间</p>
-            <p className="mt-1">48 Teams · 104 Matches · 16 Cities | USA · Canada · Mexico</p>
-          </div>
-          
-          <div className="border-t border-border pt-4">
-            <p className="text-xs">
-              Built with{" "}
+      {/* Footer - Minimal */}
+      <footer className="border-t border-border/50 mt-20 py-12 glass">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div>
+              <p className="text-lg font-semibold text-foreground">CupCalendar</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                2026 FIFA World Cup · 48 Teams · 104 Matches
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-6 text-sm text-muted-foreground">
               <a 
                 href="https://v0.app/ref/938XEW" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:underline font-medium"
+                className="hover:text-foreground transition-colors"
               >
-                v0 by Vercel
+                v0
               </a>
-              {" "}· Deployed on{" "}
               <a 
                 href="https://vercel.com" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:underline font-medium"
+                className="hover:text-foreground transition-colors"
               >
                 Vercel
               </a>
-              {" "}· Open Source on{" "}
               <a 
                 href="https://github.com/extrastu/world-cup-calendar" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-primary hover:underline font-medium"
+                className="hover:text-foreground transition-colors"
               >
                 GitHub
               </a>
-            </p>
-            <p className="text-xs mt-2 text-muted-foreground/70">
-              Data from FIFA Official | For reference only | 数据来源 FIFA 官方，仅供参考
-            </p>
+            </div>
           </div>
         </div>
       </footer>

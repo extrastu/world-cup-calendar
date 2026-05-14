@@ -1,10 +1,13 @@
-import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import type { Metadata, Viewport } from 'next'
+import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+})
 
 export const metadata: Metadata = {
   title: {
@@ -80,14 +83,23 @@ export const metadata: Metadata = {
   category: 'sports',
 }
 
+export const viewport: Viewport = {
+  themeColor: '#000000',
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  colorScheme: 'dark',
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh-CN" className="bg-background">
-      <body className="font-sans antialiased">
+    <html lang="zh-CN" className={`${inter.variable} dark`}>
+      <body className="font-sans antialiased min-h-screen bg-background">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>

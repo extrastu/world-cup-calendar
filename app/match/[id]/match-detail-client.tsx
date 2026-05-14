@@ -3,7 +3,6 @@
 import { Match, teamCountryCodes } from "@/lib/matches-data";
 import { teamSquads, positionLabels, positionColors, Player } from "@/lib/teams-data";
 import { convertToBeijingTime, getTimeOfDay, formatBeijingDate } from "@/lib/timezone";
-import { Button } from "@/components/ui/button";
 import { ArrowLeft, MapPin, Clock, Calendar, Users, Trophy, Download, Star } from "lucide-react";
 import Link from "next/link";
 
@@ -34,20 +33,20 @@ function getStageLabel(stage: Match["stage"]): string {
 
 function PlayerCard({ player }: { player: Player }) {
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors">
-      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center font-bold text-primary">
+    <div className="flex items-center gap-3 p-3 rounded-xl glass border border-border/30 hover:border-accent/30 transition-all">
+      <div className="w-10 h-10 rounded-xl bg-foreground/10 flex items-center justify-center font-bold text-foreground">
         {player.number}
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2">
           <span className="font-medium text-foreground truncate">{player.name}</span>
           {player.isCaptain && (
-            <Star className="w-4 h-4 text-amber-500 fill-amber-500 flex-shrink-0" />
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400 flex-shrink-0" />
           )}
         </div>
         <div className="text-xs text-muted-foreground truncate">{player.club}</div>
       </div>
-      <span className={`text-xs px-2 py-1 rounded-full font-medium ${positionColors[player.position]}`}>
+      <span className={`text-xs px-2.5 py-1 rounded-lg font-medium ${positionColors[player.position]}`}>
         {positionLabels[player.position]}
       </span>
     </div>
@@ -59,9 +58,9 @@ function TeamSquadSection({ team }: { team: string }) {
   
   if (!squad) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
-        <Users className="w-12 h-12 mx-auto mb-2 opacity-50" />
-        <p>阵容信息待更新</p>
+      <div className="text-center py-12 text-muted-foreground">
+        <Users className="w-16 h-16 mx-auto mb-4 opacity-20" />
+        <p className="text-lg">阵容信息待更新</p>
       </div>
     );
   }
@@ -75,7 +74,7 @@ function TeamSquadSection({ team }: { team: string }) {
   const positionOrder: Player["position"][] = ["GK", "DF", "MF", "FW"];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">主教练</span>
         <span className="font-medium text-foreground">{squad.coach}</span>
@@ -84,13 +83,14 @@ function TeamSquadSection({ team }: { team: string }) {
         <span className="text-muted-foreground">阵型</span>
         <span className="font-medium text-foreground">{squad.formation}</span>
       </div>
-      <div className="border-t border-border pt-4 space-y-4">
+      <div className="h-px bg-gradient-to-r from-transparent via-border/50 to-transparent" />
+      <div className="space-y-6">
         {positionOrder.map((position) => {
           const players = groupedPlayers[position];
           if (!players?.length) return null;
           return (
             <div key={position}>
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+              <h4 className="text-sm font-medium text-muted-foreground mb-3">
                 {positionLabels[position]} ({players.length})
               </h4>
               <div className="space-y-2">
@@ -113,18 +113,14 @@ export function MatchDetailClient({ match }: MatchDetailClientProps) {
   const awayFlag = getFlagUrl(match.awayTeam, 160);
   const isTBD = match.homeTeam.includes("W ") || match.homeTeam.includes("L ") || match.homeTeam.match(/^\d/);
 
-  // 转换为北京时间
   const beijingTime = convertToBeijingTime(match.date, match.time);
   const timeOfDay = getTimeOfDay(beijingTime.time);
   const bjDateDisplay = formatBeijingDate(beijingTime);
 
   const handleAddToCalendar = () => {
-    // 生成单场比赛的 ICS 文件
     const dateStr = match.date.replace(/-/g, "");
     const [hours, minutes] = match.time.split(":");
     const startTime = `${dateStr}T${hours}${minutes}00`;
-    
-    // 假设比赛时长2小时
     const endHour = (parseInt(hours) + 2).toString().padStart(2, "0");
     const endTime = `${dateStr}T${endHour}${minutes}00`;
 
@@ -153,57 +149,66 @@ END:VCALENDAR`;
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background relative">
+      {/* Ambient background glow */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-[-10%] left-[20%] w-[500px] h-[500px] rounded-full bg-accent/5 blur-[100px]" />
+        <div className="absolute bottom-[10%] right-[10%] w-[400px] h-[400px] rounded-full bg-blue-500/5 blur-[80px]" />
+      </div>
+
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
+      <header className="sticky top-0 z-50 glass-strong border-b border-border/50">
+        <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <ArrowLeft className="w-4 h-4" />
-                返回赛程
-              </Button>
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-xl glass border border-border/50 text-muted-foreground hover:text-foreground transition-all"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              返回赛程
             </Link>
-            <div className="flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-accent" />
-              <span className="font-semibold text-foreground">2026 世界杯</span>
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-accent/20 flex items-center justify-center">
+                <Trophy className="w-4 h-4 text-accent" />
+              </div>
+              <span className="font-medium text-foreground">2026 世界杯</span>
             </div>
           </div>
         </div>
       </header>
 
-      <main className="container mx-auto px-4 py-8">
-        {/* Match Header */}
-        <div className="bg-card rounded-2xl border border-border p-6 md:p-8 mb-8">
+      <main className="container mx-auto px-6 py-8 relative">
+        {/* Match Hero Card */}
+        <div className="rounded-3xl glass border border-border/50 p-8 md:p-12 mb-8 glow-subtle">
           {/* Stage Badge */}
-          <div className="text-center mb-6">
-            <span className="inline-flex items-center rounded-full px-4 py-1.5 text-sm font-medium bg-primary/10 text-primary">
+          <div className="text-center mb-8">
+            <span className="inline-flex items-center rounded-xl px-4 py-2 text-sm font-medium bg-accent/20 text-accent border border-accent/30">
               {getStageLabel(match.stage)}
               {match.group && ` · ${match.group}组`}
             </span>
           </div>
 
           {/* Teams */}
-          <div className="flex items-center justify-center gap-4 md:gap-8 mb-8">
+          <div className="flex items-center justify-center gap-6 md:gap-12 mb-10">
             {/* Home Team */}
             <div className="flex-1 text-center">
               {homeFlag && !isTBD ? (
                 <img
                   src={homeFlag}
                   alt={match.homeTeam}
-                  className="w-20 h-14 md:w-28 md:h-20 object-cover rounded-lg shadow-md mx-auto mb-3"
+                  className="w-24 h-16 md:w-32 md:h-24 object-cover rounded-2xl shadow-2xl mx-auto mb-4"
                   crossOrigin="anonymous"
                 />
               ) : (
-                <div className="w-20 h-14 md:w-28 md:h-20 bg-muted rounded-lg flex items-center justify-center mx-auto mb-3 text-muted-foreground">
+                <div className="w-24 h-16 md:w-32 md:h-24 bg-muted/50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-muted-foreground">
                   TBD
                 </div>
               )}
-              <h2 className="text-lg md:text-2xl font-bold text-foreground">{match.homeTeam}</h2>
+              <h2 className="text-xl md:text-3xl font-bold text-foreground">{match.homeTeam}</h2>
             </div>
 
             {/* VS */}
-            <div className="px-4 py-2 rounded-full bg-secondary text-secondary-foreground text-lg md:text-xl font-bold">
+            <div className="px-5 py-3 rounded-2xl glass border border-border/50 text-xl md:text-2xl font-bold text-muted-foreground">
               VS
             </div>
 
@@ -213,43 +218,51 @@ END:VCALENDAR`;
                 <img
                   src={awayFlag}
                   alt={match.awayTeam}
-                  className="w-20 h-14 md:w-28 md:h-20 object-cover rounded-lg shadow-md mx-auto mb-3"
+                  className="w-24 h-16 md:w-32 md:h-24 object-cover rounded-2xl shadow-2xl mx-auto mb-4"
                   crossOrigin="anonymous"
                 />
               ) : (
-                <div className="w-20 h-14 md:w-28 md:h-20 bg-muted rounded-lg flex items-center justify-center mx-auto mb-3 text-muted-foreground">
+                <div className="w-24 h-16 md:w-32 md:h-24 bg-muted/50 rounded-2xl flex items-center justify-center mx-auto mb-4 text-muted-foreground">
                   TBD
                 </div>
               )}
-              <h2 className="text-lg md:text-2xl font-bold text-foreground">{match.awayTeam}</h2>
+              <h2 className="text-xl md:text-3xl font-bold text-foreground">{match.awayTeam}</h2>
             </div>
           </div>
 
+          {/* Large Time Display */}
+          <div className="text-center mb-8">
+            <div className="text-5xl md:text-7xl font-bold tracking-tight text-foreground mb-2">
+              {beijingTime.time}
+            </div>
+            <p className="text-lg text-muted-foreground">
+              {timeOfDay} · 北京时间
+            </p>
+          </div>
+
           {/* Match Info */}
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-sm md:text-base text-muted-foreground">
-            <div className="flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-primary" />
+          <div className="flex flex-wrap justify-center gap-6 text-sm md:text-base text-muted-foreground">
+            <div className="flex items-center gap-2 px-4 py-2 rounded-xl glass border border-border/30">
+              <Calendar className="w-5 h-5 text-accent" />
               <span>{bjDateDisplay}</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-5 h-5 text-primary" />
-              <span className="font-medium text-foreground">{beijingTime.time}</span>
-              <span className="text-muted-foreground">{timeOfDay} 北京时间</span>
-            </div>
             {match.venue !== "TBD" && (
-              <div className="flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-primary" />
+              <div className="flex items-center gap-2 px-4 py-2 rounded-xl glass border border-border/30">
+                <MapPin className="w-5 h-5 text-accent" />
                 <span>{match.venue}, {match.city}</span>
               </div>
             )}
           </div>
 
           {/* Add to Calendar Button */}
-          <div className="mt-6 text-center">
-            <Button onClick={handleAddToCalendar} className="gap-2">
+          <div className="mt-8 text-center">
+            <button
+              onClick={handleAddToCalendar}
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-medium rounded-xl bg-foreground text-background hover:bg-foreground/90 transition-all"
+            >
               <Download className="w-4 h-4" />
               添加到日历
-            </Button>
+            </button>
           </div>
         </div>
 
@@ -257,13 +270,13 @@ END:VCALENDAR`;
         {!isTBD && (
           <div className="grid md:grid-cols-2 gap-6">
             {/* Home Team Squad */}
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="rounded-2xl glass border border-border/50 p-6">
+              <div className="flex items-center gap-4 mb-6">
                 {homeFlag && (
                   <img
-                    src={getFlagUrl(match.homeTeam, 40)}
+                    src={getFlagUrl(match.homeTeam, 60)}
                     alt={match.homeTeam}
-                    className="w-8 h-6 object-cover rounded shadow-sm"
+                    className="w-10 h-7 object-cover rounded-lg shadow-lg"
                     crossOrigin="anonymous"
                   />
                 )}
@@ -273,13 +286,13 @@ END:VCALENDAR`;
             </div>
 
             {/* Away Team Squad */}
-            <div className="bg-card rounded-2xl border border-border p-6">
-              <div className="flex items-center gap-3 mb-6">
+            <div className="rounded-2xl glass border border-border/50 p-6">
+              <div className="flex items-center gap-4 mb-6">
                 {awayFlag && (
                   <img
-                    src={getFlagUrl(match.awayTeam, 40)}
+                    src={getFlagUrl(match.awayTeam, 60)}
                     alt={match.awayTeam}
-                    className="w-8 h-6 object-cover rounded shadow-sm"
+                    className="w-10 h-7 object-cover rounded-lg shadow-lg"
                     crossOrigin="anonymous"
                   />
                 )}
