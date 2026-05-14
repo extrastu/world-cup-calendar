@@ -1,7 +1,7 @@
 {
-  "name": "2026 FIFA 世界杯日历",
-  "short_name": "世界杯日历",
-  "description": "2026年FIFA世界杯完整赛程表，北京时间显示，支持日历订阅",
+  "name": "CupCalendar - 2026 FIFA World Cup Schedule",
+  "short_name": "CupCalendar",
+  "description": "2026 FIFA World Cup Schedule with Beijing Time. 世界杯赛程北京时间。",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",

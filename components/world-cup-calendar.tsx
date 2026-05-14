@@ -95,10 +95,10 @@ export function WorldCupCalendar() {
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-foreground flex items-center gap-2">
                 <Trophy className="w-7 h-7 text-accent" />
-                <span className="text-balance">2026 FIFA 世界杯</span>
+                <span className="text-balance">CupCalendar</span>
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                美国 · 加拿大 · 墨西哥 | 所有时间均为北京时间
+                2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间
               </p>
             </div>
 
@@ -329,8 +329,9 @@ export function WorldCupCalendar() {
       {/* Footer */}
       <footer className="border-t border-border mt-12 py-6">
         <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          <p>数据来源: FIFA 官方 | 所有时间均为北京时间 (UTC+8)</p>
-          <p className="mt-1">共 48 支球队 · 104 场比赛 · 16 座城市</p>
+          <p className="font-medium text-foreground">CupCalendar</p>
+          <p className="mt-1">2026 FIFA World Cup Schedule | 世界杯赛程 · Beijing Time 北京时间</p>
+          <p className="mt-1">48 Teams · 104 Matches · 16 Cities | USA · Canada · Mexico</p>
         </div>
       </footer>
     </div>

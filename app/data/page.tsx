@@ -2,15 +2,18 @@ import { Metadata } from "next";
 import { DataOverviewClient } from "./data-overview-client";
 
 export const metadata: Metadata = {
-  title: "完整数据披露 | 2026世界杯日历",
-  description: "2026年FIFA世界杯完整数据披露：48支参赛球队、12个小组、16座比赛场馆、104场比赛详细信息。方便球迷查漏补缺，不错过任何精彩。",
+  title: "Data Overview | 数据总览",
+  description: "Complete 2026 FIFA World Cup data: 48 teams, 12 groups, 16 venues, 104 matches. 世界杯完整数据披露，球队名单、场馆信息、比赛统计。",
   keywords: [
-    "2026世界杯数据",
-    "世界杯球队名单",
-    "世界杯场馆",
-    "世界杯分组",
-    "48支球队",
-    "世界杯统计",
+    "2026 FIFA World Cup Schedule",
+    "世界杯赛程",
+    "World Cup 2026 Calendar",
+    "World Cup Data",
+    "World Cup Teams",
+    "World Cup Venues",
+    "World Cup Groups",
+    "世界杯数据",
+    "世界杯球队",
   ],
 };
 

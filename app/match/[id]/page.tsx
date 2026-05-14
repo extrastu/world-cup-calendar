@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const beijingTime = convertToBeijingTime(match.date, match.time);
   const bjDateDisplay = formatBeijingDate(beijingTime);
   const title = `${match.homeTeam} vs ${match.awayTeam} | ${match.stage}`;
-  const description = `2026年FIFA世界杯 ${match.stage}：${match.homeTeam} 对阵 ${match.awayTeam}。北京时间 ${bjDateDisplay} ${beijingTime.time}，场馆：${match.venue}，${match.city}。查看双方球队阵容和比赛详情。`;
+  const description = `2026 FIFA World Cup ${match.stage}: ${match.homeTeam} vs ${match.awayTeam}. Beijing Time ${bjDateDisplay} ${beijingTime.time}. Venue: ${match.venue}, ${match.city}. 世界杯${match.stage === 'group' ? '小组赛' : match.stage}，北京时间。`;
 
   return {
     title,
@@ -33,22 +33,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     keywords: [
       match.homeTeam,
       match.awayTeam,
-      '2026世界杯',
+      '2026 FIFA World Cup Schedule',
+      '世界杯赛程',
+      'World Cup 2026 Calendar',
       match.stage,
-      '世界杯比赛',
-      '北京时间',
       match.city,
-      '球队阵容',
+      'World Cup Match',
     ],
     openGraph: {
-      title: `${match.homeTeam} vs ${match.awayTeam} | 2026世界杯`,
+      title: `${match.homeTeam} vs ${match.awayTeam} | CupCalendar`,
       description,
       type: 'article',
       images: ['/og-image.jpg'],
     },
     twitter: {
       card: 'summary_large_image',
-      title: `${match.homeTeam} vs ${match.awayTeam}`,
+      title: `${match.homeTeam} vs ${match.awayTeam} | CupCalendar`,
       description,
       images: ['/og-image.jpg'],
     },
