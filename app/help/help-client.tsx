@@ -86,13 +86,12 @@ export function HelpClient() {
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
             订阅日历，开赛前收到提醒
           </p>
-          <a
-            href="/api/calendar"
-            download="fifa-world-cup-2026.ics"
+          <Link
+            href="/subscribe"
             className="block w-full text-center px-3 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
           >
             立即订阅
-          </a>
+          </Link>
         </div>
 
         {/* Footer */}

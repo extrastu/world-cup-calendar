@@ -158,13 +158,12 @@ export function TeamsClient() {
           <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
             订阅日历，开赛前收到提醒
           </p>
-          <a
-            href="/api/calendar"
-            download="fifa-world-cup-2026.ics"
+          <Link
+            href="/subscribe"
             className="block w-full text-center px-3 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
           >
             立即订阅
-          </a>
+          </Link>
         </div>
 
         {/* Footer */}
@@ -182,7 +181,7 @@ export function TeamsClient() {
           <div className="px-6 md:px-10 py-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-xl font-semibold text-foreground tracking-tight">参赛球队</h1>
+                <h1 className="text-xl font-semibold text-foreground tracking-tight">参��球队</h1>
                 <p className="text-sm text-muted-foreground">
                   共 48 支球队参赛
                 </p>
