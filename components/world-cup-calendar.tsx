@@ -9,10 +9,6 @@ import {
   Calendar,
   Trophy,
   Users,
-  MapPin,
-  Newspaper,
-  Star,
-  Bell,
   ChevronRight,
   ChevronLeft,
   Globe,
@@ -342,18 +338,10 @@ export function WorldCupCalendar() {
   }, [viewMode, selectedGroup, selectedDate]);
 
   const navItems = [
-    { id: "home", icon: Home, label: "首页" },
-    { id: "matches", icon: Calendar, label: "赛程" },
-    { id: "teams", icon: Users, label: "球队" },
-    { id: "groups", icon: Trophy, label: "小组" },
-    { id: "stadiums", icon: MapPin, label: "球场" },
-    { id: "news", icon: Newspaper, label: "新闻" },
-  ];
-
-  const secondaryNavItems = [
-    { id: "calendar", icon: Calendar, label: "日历" },
-    { id: "favorites", icon: Star, label: "收藏" },
-    { id: "alerts", icon: Bell, label: "提醒" },
+    { id: "home", icon: Home, label: "首页", href: "/" },
+    { id: "matches", icon: Calendar, label: "赛程", href: "/data" },
+    { id: "teams", icon: Users, label: "球队", href: "/data?tab=teams" },
+    { id: "groups", icon: Trophy, label: "小组", href: "/data?tab=groups" },
   ];
 
   return (
@@ -377,8 +365,9 @@ export function WorldCupCalendar() {
         <nav className="flex-1 p-4">
           <div className="space-y-1">
             {navItems.map((item) => (
-              <button
+              <Link
                 key={item.id}
+                href={item.href}
                 onClick={() => setActiveNav(item.id)}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
                   activeNav === item.id
@@ -388,26 +377,7 @@ export function WorldCupCalendar() {
               >
                 <item.icon className="w-4 h-4" />
                 <span>{item.label}</span>
-              </button>
-            ))}
-          </div>
-
-          <div className="my-4 h-px bg-border/50" />
-
-          <div className="space-y-1">
-            {secondaryNavItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveNav(item.id)}
-                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                  activeNav === item.id
-                    ? "bg-muted/50 text-foreground"
-                    : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
-                }`}
-              >
-                <item.icon className="w-4 h-4" />
-                <span>{item.label}</span>
-              </button>
+              </Link>
             ))}
           </div>
         </nav>
