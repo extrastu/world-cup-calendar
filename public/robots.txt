@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://worldcup2026.vercel.app/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Important pages
+Allow: /
+Allow: /match/*
+Allow: /api/calendar

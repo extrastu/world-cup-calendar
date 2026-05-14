@@ -1,0 +1,26 @@
+{
+  "name": "2026 FIFA 世界杯日历",
+  "short_name": "世界杯日历",
+  "description": "2026年FIFA世界杯完整赛程表，北京时间显示，支持日历订阅",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.jpg",
+      "sizes": "192x192",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "utilities"],
+  "lang": "zh-CN"
+}
