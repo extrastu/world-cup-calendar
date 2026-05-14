@@ -349,7 +349,7 @@ export function WorldCupCalendar() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Left Sidebar */}
-      <aside className="hidden lg:flex flex-col w-56 border-r border-border/50 bg-card/20">
+      <aside className="hidden lg:flex flex-col w-56 border-r border-border/50 bg-card/20 sticky top-0 h-screen overflow-y-auto">
         {/* Logo */}
         <div className="p-6 border-b border-border/50">
           <div className="flex items-center gap-3">
@@ -393,7 +393,7 @@ export function WorldCupCalendar() {
             不错过任何比赛
           </h3>
           <p className="text-xs text-muted-foreground mb-3">
-            订阅日历，开赛前收到���醒
+            订阅日历，开赛前收到提醒
           </p>
           <a
             href="/api/calendar"
@@ -671,7 +671,7 @@ export function WorldCupCalendar() {
             {filteredMatches.length > 10 && (
               <div className="px-4 py-3 border-t border-border/50">
                 <Link
-                  href="/data"
+                  href="/matches"
                   className="flex items-center justify-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
                 >
                   加载更多比赛 <ChevronRight className="w-4 h-4" />
@@ -683,7 +683,7 @@ export function WorldCupCalendar() {
       </div>
 
       {/* Right Sidebar */}
-      <aside className="hidden xl:block w-72 border-l border-border/50 bg-card/20 p-4 space-y-4">
+      <aside className="hidden xl:block w-72 border-l border-border/50 bg-card/20 p-4 space-y-4 sticky top-0 h-screen overflow-y-auto">
         {/* Calendar */}
         <MiniCalendar
           selectedDate={selectedDate}
@@ -721,7 +721,7 @@ export function WorldCupCalendar() {
         <div className="bg-card/30 rounded-xl border border-border/50 p-4">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-semibold text-foreground">即将开始</h3>
-            <Link href="/data" className="text-xs text-accent">
+            <Link href="/matches" className="text-xs text-accent">
               查看全部
             </Link>
           </div>
