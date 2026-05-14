@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { matches, groups, Match, teamCountryCodes } from "@/lib/matches-data";
-import { convertToBeijingTime, getTimeOfDay } from "@/lib/timezone";
+import { convertToTimezone, timezoneOptions, TimezoneOption } from "@/lib/timezone";
 import { Button } from "@/components/ui/button";
 import {
   Home,
@@ -96,15 +96,15 @@ function Countdown({ targetDate }: { targetDate: Date }) {
 }
 
 // Tonight's Match Card
-function TonightMatchCard({ match }: { match: Match }) {
+function TonightMatchCard({ match, timezone }: { match: Match; timezone: TimezoneOption }) {
   const homeFlag = getFlagUrl(match.homeTeam);
   const awayFlag = getFlagUrl(match.awayTeam);
   const isTBD =
     match.homeTeam.includes("W ") ||
     match.homeTeam.includes("L ") ||
     match.homeTeam.match(/^\d/);
-  const beijingTime = convertToBeijingTime(match.date, match.time);
-  const [, bjMonth, bjDay] = beijingTime.date.split("-").map(Number);
+  const convertedTime = convertToTimezone(match.date, match.time, timezone.offset);
+  const [, bjMonth, bjDay] = convertedTime.date.split("-").map(Number);
 
   return (
     <Link href={`/match/${match.id}`} className="block">
@@ -138,9 +138,9 @@ function TonightMatchCard({ match }: { match: Match }) {
           {/* Time */}
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-foreground">
-              {beijingTime.time}
+              {convertedTime.time}
             </div>
-            <div className="text-xs text-accent mt-1">北京</div>
+            <div className="text-xs text-accent mt-1">{timezone.id === "beijing" ? "北京" : timezone.label.split(" ")[0]}</div>
           </div>
 
           {/* Away Team */}
@@ -188,6 +188,28 @@ export function WorldCupCalendar() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [activeNav, setActiveNav] = useState("home");
+  const [selectedTimezone, setSelectedTimezone] = useState<TimezoneOption>(timezoneOptions[0]);
+  const [showTimezoneDropdown, setShowTimezoneDropdown] = useState(false);
+
+  // Share function
+  const handleShare = async () => {
+    const shareData = {
+      title: "2026 FIFA World Cup Calendar",
+      text: "查看2026年FIFA世界杯完整赛程，自动转换本地时间",
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("链接已复制到剪贴板");
+      }
+    } catch (err) {
+      console.log("Share failed:", err);
+    }
+  };
 
   // World Cup start date: June 11, 2026
   const worldCupStart = new Date(2026, 5, 11, 0, 0, 0);
@@ -329,14 +351,41 @@ export function WorldCupCalendar() {
           <div className="relative px-4 md:px-8 py-8 md:py-12">
             {/* Top Bar */}
             <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/50 border border-border/50">
-                <Globe className="w-4 h-4 text-accent" />
-                <span className="text-sm text-muted-foreground">
-                  北京时间 (GMT+8)
-                </span>
+              <div className="relative">
+                <button
+                  onClick={() => setShowTimezoneDropdown(!showTimezoneDropdown)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-card/50 border border-border/50 hover:bg-card/70 transition-colors cursor-pointer"
+                >
+                  <Globe className="w-4 h-4 text-accent" />
+                  <span className="text-sm text-muted-foreground">
+                    {selectedTimezone.label}
+                  </span>
+                  <ChevronRight className={`w-4 h-4 text-muted-foreground transition-transform ${showTimezoneDropdown ? 'rotate-90' : ''}`} />
+                </button>
+                {showTimezoneDropdown && (
+                  <div className="absolute top-full left-0 mt-2 w-56 bg-card border border-border/50 rounded-lg shadow-lg z-50 py-1">
+                    {timezoneOptions.map((tz) => (
+                      <button
+                        key={tz.id}
+                        onClick={() => {
+                          setSelectedTimezone(tz);
+                          setShowTimezoneDropdown(false);
+                        }}
+                        className={`w-full text-left px-4 py-2 text-sm hover:bg-muted/50 transition-colors ${
+                          selectedTimezone.id === tz.id ? 'text-accent bg-muted/30' : 'text-foreground'
+                        }`}
+                      >
+                        {tz.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               <div className="hidden md:flex items-center gap-2">
-                <button className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors">
+                <button 
+                  onClick={handleShare}
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border/50 hover:bg-muted/30 transition-colors"
+                >
                   <Share2 className="w-4 h-4" />
                   <span className="text-sm">分享</span>
                 </button>
@@ -360,7 +409,7 @@ export function WorldCupCalendar() {
               </h1>
 
               <p className="text-muted-foreground mb-2">
-                全部 {matches.length} 场比赛，自动转换北京时间
+                全部 {matches.length} 场比赛，自动转换{selectedTimezone.label.split(" ")[0]}
               </p>
               <p className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
                 <Calendar className="w-4 h-4" />
@@ -401,13 +450,13 @@ export function WorldCupCalendar() {
             </Link>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            北京时间 (GMT+8)
+            {selectedTimezone.label}
           </p>
 
           {/* Horizontal scroll matches */}
           <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
             {tonightMatches.map((match) => (
-              <TonightMatchCard key={match.id} match={match} />
+              <TonightMatchCard key={match.id} match={match} timezone={selectedTimezone} />
             ))}
             <button
               onClick={() => {}}
@@ -455,13 +504,13 @@ export function WorldCupCalendar() {
               <div className="col-span-5">比赛</div>
               <div className="col-span-1">小组</div>
               <div className="col-span-2">球场</div>
-              <div className="col-span-2 text-right">时间 (北京)</div>
+              <div className="col-span-2 text-right">时间 ({selectedTimezone.label.split(" ")[0]})</div>
             </div>
 
             {/* Table Body */}
             <div className="divide-y divide-border/50">
               {filteredMatches.slice(0, 10).map((match) => {
-                const beijingTime = convertToBeijingTime(match.date, match.time);
+                const convertedTime = convertToTimezone(match.date, match.time, selectedTimezone.offset);
                 const homeFlag = getFlagUrl(match.homeTeam);
                 const awayFlag = getFlagUrl(match.awayTeam);
                 const isTBD =
@@ -533,7 +582,7 @@ export function WorldCupCalendar() {
                     {/* Time */}
                     <div className="col-span-2 text-right">
                       <span className="text-lg font-semibold text-accent">
-                        {beijingTime.time}
+                        {convertedTime.time}
                       </span>
                     </div>
                   </Link>
