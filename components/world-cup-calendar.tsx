@@ -341,9 +341,9 @@ export function WorldCupCalendar() {
 
   const navItems = [
     { id: "home", icon: Home, label: "首页", href: "/" },
-    { id: "matches", icon: Calendar, label: "赛程", href: "/data" },
-    { id: "teams", icon: Users, label: "球队", href: "/data?tab=teams" },
-    { id: "groups", icon: Trophy, label: "小组", href: "/data?tab=groups" },
+    { id: "matches", icon: Calendar, label: "赛程", href: "/matches" },
+    { id: "teams", icon: Users, label: "球队", href: "/teams" },
+    { id: "groups", icon: Trophy, label: "小组", href: "/groups" },
   ];
 
   return (
@@ -393,7 +393,7 @@ export function WorldCupCalendar() {
             不错过任何比赛
           </h3>
           <p className="text-xs text-muted-foreground mb-3">
-            订阅日历，开赛前收到提醒
+            订阅日历，开赛前收到���醒
           </p>
           <a
             href="/api/calendar"
@@ -520,7 +520,7 @@ export function WorldCupCalendar() {
               </h2>
             </div>
             <Link
-              href="/data"
+              href="/matches"
               className="flex items-center gap-1 text-sm text-accent hover:underline"
             >
               查看完整赛程 <ArrowRight className="w-4 h-4" />
