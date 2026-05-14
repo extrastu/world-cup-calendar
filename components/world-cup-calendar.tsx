@@ -10,15 +10,12 @@ import {
   Trophy,
   Users,
   ChevronRight,
-  ChevronLeft,
   Globe,
   Share2,
   CalendarPlus,
   Eye,
   Database,
   ArrowRight,
-  Star,
-  Bell,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -189,122 +186,6 @@ function TonightMatchCard({ match }: { match: Match }) {
   );
 }
 
-// Mini Calendar Component
-function MiniCalendar({
-  selectedDate,
-  onSelectDate,
-  matchDates,
-}: {
-  selectedDate: string | null;
-  onSelectDate: (date: string | null) => void;
-  matchDates: string[];
-}) {
-  const [currentMonth, setCurrentMonth] = useState(new Date(2026, 5, 1)); // June 2026
-
-  const daysInMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth() + 1,
-    0
-  ).getDate();
-  const firstDayOfMonth = new Date(
-    currentMonth.getFullYear(),
-    currentMonth.getMonth(),
-    1
-  ).getDay();
-  const adjustedFirstDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-
-  const weeks = ["一", "二", "三", "四", "五", "六", "日"];
-  const days = [];
-
-  for (let i = 0; i < adjustedFirstDay; i++) {
-    days.push(null);
-  }
-  for (let i = 1; i <= daysInMonth; i++) {
-    days.push(i);
-  }
-
-  const prevMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1)
-    );
-  };
-
-  const nextMonth = () => {
-    setCurrentMonth(
-      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
-    );
-  };
-
-  return (
-    <div className="bg-card/30 rounded-xl border border-border/50 p-4">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <span className="font-semibold text-foreground">
-          {currentMonth.toLocaleDateString("zh-CN", {
-            year: "numeric",
-            month: "long",
-          })}
-        </span>
-        <div className="flex items-center gap-1">
-          <button
-            onClick={prevMonth}
-            className="p-1 rounded hover:bg-muted/50 transition-colors"
-          >
-            <ChevronLeft className="w-4 h-4 text-muted-foreground" />
-          </button>
-          <button
-            onClick={nextMonth}
-            className="p-1 rounded hover:bg-muted/50 transition-colors"
-          >
-            <ChevronRight className="w-4 h-4 text-muted-foreground" />
-          </button>
-        </div>
-      </div>
-
-      {/* Weekday headers */}
-      <div className="grid grid-cols-7 gap-1 mb-2">
-        {weeks.map((day) => (
-          <div
-            key={day}
-            className="text-center text-xs text-muted-foreground py-1"
-          >
-            {day}
-          </div>
-        ))}
-      </div>
-
-      {/* Days */}
-      <div className="grid grid-cols-7 gap-1">
-        {days.map((day, index) => {
-          if (day === null) {
-            return <div key={`empty-${index}`} className="p-2" />;
-          }
-
-          const dateStr = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-          const hasMatch = matchDates.includes(dateStr);
-          const isSelected = selectedDate === dateStr;
-
-          return (
-            <button
-              key={day}
-              onClick={() => onSelectDate(isSelected ? null : dateStr)}
-              className={`p-2 text-sm rounded-lg transition-all ${
-                isSelected
-                  ? "bg-accent text-accent-foreground"
-                  : hasMatch
-                    ? "text-foreground hover:bg-muted/50"
-                    : "text-muted-foreground/50 hover:bg-muted/30"
-              }`}
-            >
-              {day}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 export function WorldCupCalendar() {
   const [viewMode, setViewMode] = useState<ViewMode>("calendar");
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
@@ -313,11 +194,6 @@ export function WorldCupCalendar() {
 
   // World Cup start date: June 11, 2026
   const worldCupStart = new Date(2026, 5, 11, 0, 0, 0);
-
-  // Get unique dates
-  const matchDates = useMemo(() => {
-    return [...new Set(matches.map((m) => m.date))].sort();
-  }, []);
 
   // Get first 5 matches as "tonight's matches"
   const tonightMatches = useMemo(() => {
@@ -686,103 +562,6 @@ export function WorldCupCalendar() {
           </div>
         </section>
       </div>
-
-      {/* Right Sidebar */}
-      <aside className="hidden xl:block w-72 border-l border-border/50 bg-card/20 p-4 space-y-4 sticky top-0 h-screen overflow-y-auto">
-        {/* Calendar */}
-        <MiniCalendar
-          selectedDate={selectedDate}
-          onSelectDate={setSelectedDate}
-          matchDates={matchDates}
-        />
-
-        {/* My Teams */}
-        <div className="bg-card/30 rounded-xl border border-border/50 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground">我的球队</h3>
-            <button className="text-xs text-accent">编辑</button>
-          </div>
-          <div className="space-y-3">
-            {["Brazil", "Argentina", "Japan"].map((team) => (
-              <div key={team} className="flex items-center gap-3">
-                <img
-                  src={getFlagUrl(team)}
-                  alt={team}
-                  className="w-8 h-5 object-cover rounded"
-                  crossOrigin="anonymous"
-                />
-                <span className="text-sm text-foreground flex-1">{team}</span>
-                <Star className="w-4 h-4 text-accent fill-accent" />
-              </div>
-            ))}
-          </div>
-          <button className="w-full mt-4 flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-dashed border-border/50 text-sm text-muted-foreground hover:border-accent/50 hover:text-accent transition-colors">
-            <span>+</span>
-            <span>添加球队</span>
-          </button>
-        </div>
-
-        {/* Upcoming Matches */}
-        <div className="bg-card/30 rounded-xl border border-border/50 p-4">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-foreground">即将开始</h3>
-            <Link href="/matches" className="text-xs text-accent">
-              查看全部
-            </Link>
-          </div>
-          <div className="space-y-3">
-            {matches.slice(0, 4).map((match) => {
-              const beijingTime = convertToBeijingTime(match.date, match.time);
-              const [, bjMonth, bjDay] = beijingTime.date.split("-").map(Number);
-              return (
-                <Link
-                  key={match.id}
-                  href={`/match/${match.id}`}
-                  className="flex items-center gap-3 group"
-                >
-                  <img
-                    src={getFlagUrl(match.homeTeam)}
-                    alt={match.homeTeam}
-                    className="w-6 h-4 object-cover rounded"
-                    crossOrigin="anonymous"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground truncate">
-                      <span className="font-medium">{match.homeTeam}</span>
-                      <span className="text-muted-foreground"> vs </span>
-                      <span>{match.awayTeam}</span>
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {bjMonth}月{bjDay}日 · {beijingTime.time}
-                    </p>
-                  </div>
-                  <Bell className="w-4 h-4 text-muted-foreground group-hover:text-accent transition-colors" />
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Calendar Sync */}
-        <div className="bg-card/30 rounded-xl border border-border/50 p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-8 h-8 rounded-lg bg-accent/20 flex items-center justify-center">
-              <CalendarPlus className="w-4 h-4 text-accent" />
-            </div>
-            <div>
-              <h3 className="font-medium text-foreground text-sm">日历同步</h3>
-              <p className="text-xs text-muted-foreground">同步到您的日历应用</p>
-            </div>
-          </div>
-          <a
-            href="/api/calendar"
-            download="fifa-world-cup-2026.ics"
-            className="block w-full text-center px-3 py-2 text-sm font-medium rounded-lg bg-accent text-accent-foreground hover:bg-accent/90 transition-colors"
-          >
-            订阅日历
-          </a>
-        </div>
-      </aside>
     </div>
   );
 }
