@@ -16,6 +16,7 @@ import {
   Eye,
   Database,
   ArrowRight,
+  Info,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -240,6 +241,7 @@ export function WorldCupCalendar() {
     { id: "matches", icon: Calendar, label: "赛程", href: "/matches" },
     { id: "teams", icon: Users, label: "球队", href: "/teams" },
     { id: "groups", icon: Trophy, label: "小组", href: "/groups" },
+    { id: "about", icon: Info, label: "关于", href: "/about" },
   ];
 
   return (
